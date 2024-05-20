@@ -2,7 +2,7 @@
 Testi teşvikli değil fakat ileriki aşamaları ödüllü olma ihtimali yüksek. İyi bir yatırım aldılar. Değerlendirmek gerekir diye düşündüm.
 Twitter: https://twitter.com/bonus_block
 Web Site: https://www.bonusblock.io/
-##Sistem Gereksinimleri
+## Sistem Gereksinimleri
 ```
 4 CPU
 8 RAM
@@ -15,12 +15,12 @@ Bunlar ekibin tavsiye ettiği, ama daha düşük bir sisteme de kurulabilir. Ör
 150 SSD
 ```
 Her şey hazırsa haydi başlayalım
-###Sistemi Güncelleyelim
+### Sistemi Güncelleyelim
 ```
 sudo apt update
 sudo apt-get install git curl build-essential make jq gcc snapd chrony lz4 tmux unzip bc -y
 ```
-###Go Yükleyelim
+### Go Yükleyelim
 ```
 rm -rf $HOME/go
 sudo rm -rf /usr/local/go
@@ -37,7 +37,7 @@ EOF
 source $HOME/.profile
 go version
 ```
-##Nodu Kuralım
+## Nodu Kuralım
 ```
 cd $HOME
 rm -rf BonusBlock-chain/
@@ -53,7 +53,7 @@ make install
 
 bonus-blockd version
 ```
-##İnitalizasyon İşlemlerini Yapalım
+## İnitalizasyon İşlemlerini Yapalım
 ```
 Dikkat:monikerName kısmını kendi moniker adınızla değiştirin!!!
 bonus-blockd init monikerName --chain-id=blocktopia-01
@@ -64,8 +64,8 @@ curl -Ls https://ss-t.bonusblock.nodestake.top/genesis.json > $HOME/.bonusblock/
 Addrbook ekleyelim:
 curl -Ls https://ss-t.bonusblock.nodestake.top/addrbook.json > $HOME/.bonusblock/config/addrbook.json
 ```
-##Servis Dosyası Oluşturalım
-```
+## Servis Dosyası Oluşturalım
+``` 
 sudo tee /etc/systemd/system/bonus-blockd.service > /dev/null << EOF
 [Unit]
 Description=Bonusblock Node
@@ -83,7 +83,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable bonus-blockd
 ```
-##Hızlı Senkronizasyon İçin Snapshot
+## Hızlı Senkronizasyon İçin Snapshot
 ```
 SNAP_NAME=$(curl -s https://ss-t.bonusblock.nodestake.top/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
 curl -o - -L https://ss-t.bonusblock.nodestake.top/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/.bonusblock
@@ -91,18 +91,19 @@ curl -o - -L https://ss-t.bonusblock.nodestake.top/${SNAP_NAME}  | lz4 -c -d - |
 sudo systemctl restart bonus-blockd
 journalctl -u bonus-blockd -f
 ```
-##Cüzdan Oluşturalım
-```
+## Cüzdan Oluşturalım
+
 Dikkat:<walletname> kısmına kendi cüzdan adınızı yazın!!!
+```
 bonus-blockd keys add <walletname>
 ```
-###Linkten faucete gidip test tokeni alalım: [this](https://faucet.bonusblock.io/)
+### Linkten faucete gidip test tokeni alalım: [this](https://faucet.bonusblock.io/)
 
-##Senkronizasyon durumumuzu kontrol edelim. Çıktının false olması gerekiyor. Eğer false çıktısı verdiyse validatör işlemine geçelim.
+## Senkronizasyon durumumuzu kontrol edelim. Çıktının false olması gerekiyor. Eğer false çıktısı verdiyse validatör işlemine geçelim.
 ```
 bonus-blockd status 2>&1 | jq .SyncInfo
 ```
-##Çıktımız false ise validatör işlemlerini tamamlayalım
+## Çıktımız false ise validatör işlemlerini tamamlayalım
 ```
 bonus-blockd tx staking create-validator \
 --amount 900000ubonus \
